@@ -1,29 +1,17 @@
-interface BaseField {
+type Field = {
   statName: string
-}
-
-interface BooleanField extends BaseField {
-  attempted: boolean
-  succeeded: boolean
-}
-
-interface NumberField extends BaseField {
   attempts: number
   successes: number
 }
 
-export type Field = NumberField | BooleanField
-
 type GraphableField = {
   // qm1
   match: string
-} & (NumberField | BooleanField)
+} & Field
 
 export interface BaseReport {
-  data: {
-    teleop: Field[]
-    auto: Field[]
-  }
+  teleop: Field[]
+  auto: Field[]
   autoName: string
 }
 

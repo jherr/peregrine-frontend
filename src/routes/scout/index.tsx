@@ -43,9 +43,8 @@ const isReportReady = (s: State): s is ReadyState =>
 
 const createEmptyField = (s: StatDescription) => ({
   statName: s.name,
-  ...(s.type === 'boolean'
-    ? { attempted: false, succeeded: false }
-    : { attempts: 0, successes: 0 }),
+  attempts: 0,
+  successes: 0,
 })
 
 export class ScoutPage extends Component<Props, State> {
@@ -57,10 +56,8 @@ export class ScoutPage extends Component<Props, State> {
     schema: null,
     report: {
       autoName: '',
-      data: {
-        teleop: [],
-        auto: [],
-      },
+      teleop: [],
+      auto: [],
     },
   }
 
@@ -73,10 +70,8 @@ export class ScoutPage extends Component<Props, State> {
             schema,
             report: {
               ...s.report,
-              data: {
-                teleop: schema.teleop.map(createEmptyField),
-                auto: schema.auto.map(createEmptyField),
-              },
+              teleop: schema.teleop.map(createEmptyField),
+              auto: schema.auto.map(createEmptyField),
             },
           }),
         ),
@@ -111,12 +106,9 @@ export class ScoutPage extends Component<Props, State> {
       (s: State): Partial<State> => ({
         report: {
           ...s.report,
-          data: {
-            ...s.report.data,
-            [gameStage]: s.report.data[gameStage].map(f =>
-              f.statName === statName ? value : f,
-            ),
-          },
+          [gameStage]: s.report[gameStage].map(f =>
+            f.statName === statName ? value : f,
+          ),
         },
       }),
     )
@@ -139,7 +131,7 @@ export class ScoutPage extends Component<Props, State> {
             />
           )}
           <h2>Auto</h2>
-          {report.data.auto.map(field => (
+          {report.auto.map(field => (
             <FieldCard
               key={'auto' + field.statName}
               field={field}
@@ -164,7 +156,7 @@ export class ScoutPage extends Component<Props, State> {
             />
           </Card>
           <h2>Teleop</h2>
-          {report.data.teleop.map(field => (
+          {report.teleop.map(field => (
             <FieldCard
               key={'teleop' + field.statName}
               field={field}
